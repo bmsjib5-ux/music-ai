@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* โทนกระดาษโน้ตเพลง: พื้นเทาอมฟ้า หมึกน้ำเงินเข้ม จุดเน้นสีชมพู */
+@layer base {
+  :root {
+    --background: 228 29% 95%;
+    --foreground: 224 42% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 42% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 42% 20%;
+    --primary: 339 68% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 82% 94%;
+    --secondary-foreground: 217 63% 40%;
+    --muted: 228 29% 95%;
+    --muted-foreground: 226 19% 44%;
+    --accent: 339 76% 94%;
+    --accent-foreground: 339 68% 40%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 225 25% 83%;
+    --input: 225 25% 83%;
+    --ring: 217 63% 50%;
+    --ink: 224 42% 20%;
+    --ink-foreground: 0 0% 100%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 226 34% 13%;
+    --foreground: 227 41% 93%;
+    --card: 227 32% 17%;
+    --card-foreground: 227 41% 93%;
+    --popover: 227 32% 17%;
+    --popover-foreground: 227 41% 93%;
+    --primary: 341 100% 72%;
+    --primary-foreground: 226 34% 13%;
+    --secondary: 219 41% 21%;
+    --secondary-foreground: 218 82% 71%;
+    --muted: 226 34% 13%;
+    --muted-foreground: 227 22% 71%;
+    --accent: 323 27% 18%;
+    --accent-foreground: 341 100% 80%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 227 26% 27%;
+    --input: 227 26% 27%;
+    --ring: 218 82% 71%;
+    --ink: 227 41% 93%;
+    --ink-foreground: 226 34% 13%;
+  }
+}
