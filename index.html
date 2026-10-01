@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>โน้ตแต่งเพลง — ตัวช่วยเขียน prompt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF0F6; --sheet:#FFFFFF; --ink:#1E2A4A; --soft:#5B6585; --line:#C9CFE0;
+  --pink:#D93A72; --pinkSoft:#FBE3EC; --blue:#2F6BD0; --blueSoft:#E2ECFB;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#151A2B; --sheet:#1D2338; --ink:#E7EAF5; --soft:#A2AAC6; --line:#343C58;
+    --pink:#FF6E9C; --pinkSoft:#3A2133; --blue:#79A6F2; --blueSoft:#1F2C4A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#151A2B; --sheet:#1D2338; --ink:#E7EAF5; --soft:#A2AAC6; --line:#343C58;
+  --pink:#FF6E9C; --pinkSoft:#3A2133; --blue:#79A6F2; --blueSoft:#1F2C4A;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans Thai","Sarabun","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  font-size:16px;line-height:1.65}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+
+/* hero: staff lines */
+header{position:relative;padding:28px 4px 22px;margin-bottom:8px}
+.staff{position:absolute;left:0;right:0;top:22px;height:64px;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 16px);opacity:.8}
+h1{position:relative;font-family:"Mitr","IBM Plex Sans Thai",sans-serif;font-weight:600;
+  font-size:clamp(2rem,7vw,3rem);line-height:1.05;margin:0;letter-spacing:-.01em}
+h1 .note{display:inline-block;color:var(--pink);transform:translateY(-.15em) rotate(-8deg);margin-left:.15em}
+header p{position:relative;margin:14px 0 0;color:var(--soft);max-width:34em}
+
+section{background:var(--sheet);border:1px solid var(--line);border-radius:14px;padding:18px 16px 16px;margin-top:14px}
+h2{font-family:"Mitr",sans-serif;font-weight:400;font-size:1.2rem;margin:0 0 4px}
+.hint{color:var(--soft);font-size:.9rem;margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{appearance:none;border:1.5px solid var(--line);background:transparent;color:var(--ink);
+  font:inherit;font-size:.95rem;padding:6px 13px;border-radius:999px;cursor:pointer;position:relative;
+  transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--soft)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.chip.rec::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--pink);border:2px solid var(--sheet)}
+.chip:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:3px solid var(--blue);outline-offset:2px}
+
+.recbar{display:none;margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--pinkSoft);font-size:.92rem}
+.recbar.show{display:block}
+.recbar b{font-weight:600}
+.recbar .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-top:8px}
+
+.rhymes{display:grid;gap:8px}
+.rhyme{display:block;text-align:left;width:100%;border:1.5px solid var(--line);background:transparent;color:var(--ink);
+  font:inherit;padding:10px 12px;border-radius:10px;cursor:pointer;position:relative}
+.rhyme strong{font-weight:600}
+.rhyme span{display:block;color:var(--soft);font-size:.88rem;margin-top:2px}
+.rhyme em{font-style:normal;display:block;font-size:.88rem;color:var(--blue);margin-top:4px}
+.rhyme[aria-pressed="true"]{border-color:var(--ink);background:var(--blueSoft)}
+.rhyme.rec::after{content:"แนะนำ";position:absolute;top:8px;right:10px;font-size:.75rem;color:var(--pink);font-weight:600}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+label.f{display:block;font-size:.9rem;color:var(--soft);margin-bottom:4px}
+input[type=text],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--paper);
+  border:1.5px solid var(--line);border-radius:10px;padding:9px 11px}
+textarea{resize:vertical;min-height:72px}
+.bpm{display:flex;align-items:center;gap:12px}
+.bpm input{flex:1;accent-color:var(--pink)}
+.bpm output{font-family:"Mitr",sans-serif;font-size:1.4rem;min-width:3.2em;text-align:right}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{appearance:none;font:inherit;font-weight:600;border-radius:10px;padding:11px 18px;cursor:pointer;border:1.5px solid var(--ink)}
+.btn.main{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{padding:6px 12px;font-size:.9rem}
+
+.out{margin-top:14px}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tab{appearance:none;font:inherit;border:0;background:transparent;color:var(--soft);padding:6px 10px;border-bottom:2px solid transparent;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--pink);font-weight:600}
+pre{white-space:pre-wrap;word-break:break-word;margin:0;padding:14px;border-radius:10px;background:var(--paper);
+  border:1px dashed var(--line);font-family:inherit;font-size:.93rem;line-height:1.7;max-height:60vh;overflow:auto}
+.copyrow{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px}
+.toast{color:var(--blue);font-size:.9rem;min-height:1.4em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="staff" aria-hidden="true"></div>
+    <h1>โน้ตแต่งเพลง<span class="note" aria-hidden="true">♪</span></h1>
+    <p>เลือกแนวเพลง อารมณ์ เครื่องดนตรี และแบบสัมผัส แล้วรับ prompt พร้อมใช้ทั้งสำหรับให้ AI เขียนเนื้อร้อง และสำหรับ AI สร้างเพลงอย่าง Suno หรือ Udio จุดสีชมพูคือค่าที่แนะนำสำหรับแนวที่เลือก</p>
+  </header>
+
+  <section>
+    <h2>แนวเพลง</h2>
+    <p class="hint">เลือกได้หนึ่งแนว ระบบจะแนะนำเครื่องดนตรี จังหวะ และสัมผัสที่เข้ากันให้</p>
+    <div class="chips" id="genre"></div>
+    <div class="recbar" id="recbar">
+      <div id="rectext"></div>
+      <div class="row"><span class="hint" style="margin:0">ค่าที่แนะนำมีจุดสีชมพูกำกับ</span>
+        <button class="btn small main" id="applyRec">ใช้ค่าที่แนะนำทั้งหมด</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>อารมณ์ของเพลง</h2>
+    <p class="hint">เลือกได้หลายอย่าง แต่ 1–2 อย่างจะชัดที่สุด</p>
+    <div class="chips" id="mood"></div>
+  </section>
+
+  <section>
+    <h2>เครื่องดนตรี</h2>
+    <p class="hint">เลือกได้หลายชิ้น</p>
+    <div class="chips" id="inst"></div>
+  </section>
+
+  <section>
+    <h2>จังหวะ</h2>
+    <div class="bpm">
+      <input type="range" id="bpm" min="60" max="180" value="96" aria-label="ความเร็ว BPM">
+      <output id="bpmOut">96</output><span class="hint" style="margin:0">BPM</span>
+    </div>
+    <p class="hint" id="bpmLabel" style="margin-top:6px">ปานกลาง</p>
+  </section>
+
+  <section>
+    <h2>การสัมผัส</h2>
+    <p class="hint">เลือกหนึ่งแบบเป็นหลัก</p>
+    <div class="rhymes" id="rhyme"></div>
+  </section>
+
+  <section>
+    <h2>รายละเอียดเพลง</h2>
+    <div class="grid2">
+      <div><label class="f" for="structure">โครงสร้างเพลง</label>
+        <select id="structure"></select></div>
+      <div><label class="f" for="vocal">เสียงร้อง</label>
+        <select id="vocal">
+          <option>นักร้องชาย</option><option>นักร้องหญิง</option><option>คู่ชาย-หญิง</option><option>ประสานเสียงกลุ่ม</option>
+        </select></div>
+      <div><label class="f" for="lang">ภาษาเนื้อร้อง</label>
+        <select id="lang"><option>ภาษาไทย</option><option>ไทยผสมอังกฤษ</option><option>ภาษาอังกฤษ</option><option>ภาษาอีสาน</option><option>คำเมือง</option></select></div>
+      <div><label class="f" for="pov">มุมมองการเล่า</label>
+        <select id="pov"><option>บุรุษที่ 1 (ฉัน/เรา)</option><option>พูดกับอีกคน (เธอ)</option><option>ผู้เล่าเรื่อง (บุรุษที่ 3)</option></select></div>
+    </div>
+    <div style="margin-top:12px"><label class="f" for="topic">เพลงนี้เล่าเรื่องอะไร</label>
+      <textarea id="topic" placeholder="เช่น คนที่ยังรอแฟนเก่าที่ป้ายรถเมล์เดิมทุกเย็น ทั้งที่รู้ว่าเขาไม่กลับมา"></textarea></div>
+    <div style="margin-top:12px"><label class="f" for="keys">คำหรือวลีที่อยากให้มีในเพลง (ไม่บังคับ)</label>
+      <input type="text" id="keys" placeholder="เช่น ฝนแรก, ร่มคันเก่า"></div>
+    <div class="actions">
+      <button class="btn main" id="make">สร้าง prompt</button>
+      <button class="btn ghost" id="random">สุ่มไอเดียให้</button>
+    </div>
+  </section>
+
+  <section class="out" id="outSec" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-t="lyric">เขียนเนื้อเพลง</button>
+      <button class="tab" role="tab" aria-selected="false" data-t="suno">สไตล์สำหรับ Suno/Udio</button>
+    </div>
+    <pre id="output"></pre>
+    <div class="copyrow"><span class="toast" id="toast"></span>
+      <button class="btn small main" id="copy">คัดลอก</button></div>
+  </section>
+</div>
+
+<script>
+const GENRES = {
+  "ป๊อป":{en:"Thai pop",inst:["เปียโน","กีตาร์โปร่ง","ซินธ์","กลอง","เบส"],bpm:104,rhyme:"abcb",mood:["รักหวาน","คิดถึง"],str:"vpc"},
+  "บัลลาด":{en:"emotional ballad",inst:["เปียโน","เครื่องสาย","กีตาร์โปร่ง"],bpm:72,rhyme:"tail",mood:["อกหัก","คิดถึง"],str:"vpc"},
+  "ลูกทุ่ง":{en:"Thai luk thung",inst:["แซกโซโฟน","กีตาร์ไฟฟ้า","กลอง","เบส","แคน"],bpm:112,rhyme:"klon",mood:["อกหัก","คิดถึง"],str:"classic"},
+  "หมอลำ":{en:"mor lam, Isan folk",inst:["พิณ","แคน","กลอง","เบส"],bpm:132,rhyme:"inner",mood:["สนุก","อกหัก"],str:"classic"},
+  "เพื่อชีวิต":{en:"Thai folk-rock, phleng phua chiwit",inst:["กีตาร์โปร่ง","ขลุ่ย","ฮาร์โมนิกา","กลอง"],bpm:92,rhyme:"klon",mood:["ให้กำลังใจ","ขบถ"],str:"story"},
+  "ร็อก":{en:"rock",inst:["กีตาร์ไฟฟ้า","เบส","กลอง"],bpm:128,rhyme:"aabb",mood:["ขบถ","ปลุกใจ"],str:"vpc"},
+  "อินดี้/โฟล์ค":{en:"indie folk",inst:["กีตาร์โปร่ง","อูคูเลเล่","เปียโน"],bpm:88,rhyme:"abcb",mood:["เหงา","คิดถึง"],str:"vc"},
+  "อาร์แอนด์บี":{en:"R&B, soul",inst:["เปียโนไฟฟ้า","เบส","กลอง","ซินธ์"],bpm:84,rhyme:"inner",mood:["โรแมนติก","เหงา"],str:"vpc"},
+  "ฮิปฮอป/แร็พ":{en:"hip-hop, rap",inst:["808","ซินธ์","กลอง","เปียโน"],bpm:90,rhyme:"multi",mood:["ขบถ","ปลุกใจ"],str:"rap"},
+  "ซิตี้ป๊อป":{en:"city pop, retro 80s",inst:["เบส","ซินธ์","กีตาร์ไฟฟ้า","แซกโซโฟน"],bpm:112,rhyme:"abab",mood:["โรแมนติก","คิดถึง"],str:"vpc"},
+  "แจ๊ส":{en:"jazz",inst:["เปียโน","ดับเบิลเบส","แซกโซโฟน","กลอง"],bpm:96,rhyme:"inner",mood:["โรแมนติก","เหงา"],str:"aaba"},
+  "อีดีเอ็ม":{en:"EDM, dance",inst:["ซินธ์","808","กลอง"],bpm:126,rhyme:"mono",mood:["สนุก","ปลุกใจ"],str:"edm"},
+  "โลไฟ":{en:"lo-fi chill",inst:["เปียโนไฟฟ้า","กีตาร์โปร่ง","กลอง"],bpm:76,rhyme:"free",mood:["เหงา","คิดถึง"],str:"vc"},
+  "ทีป๊อป":{en:"T-pop, idol dance-pop",inst:["ซินธ์","808","กลอง","เบส"],bpm:118,rhyme:"mono",mood:["สนุก","รักหวาน"],str:"vpcb"}
+};
+const MOODS=["อกหัก","รักหวาน","คิดถึง","เหงา","โรแมนติก","สนุก","ให้กำลังใจ","ปลุกใจ","ขบถ","เศร้าลึก","หวานอมขม","ปล่อยวาง"];
+const MOOD_EN={"อกหัก":"heartbroken","รักหวาน":"sweet love","คิดถึง":"longing","เหงา":"lonely","โรแมนติก":"romantic","สนุก":"fun, upbeat","ให้กำลังใจ":"hopeful, uplifting","ปลุกใจ":"anthemic","ขบถ":"rebellious","เศร้าลึก":"melancholic","หวานอมขม":"bittersweet","ปล่อยวาง":"calm, letting go"};
+const INSTS=["กีตาร์โปร่ง","กีตาร์ไฟฟ้า","เปียโน","เปียโนไฟฟ้า","ซินธ์","เบส","ดับเบิลเบส","กลอง","808","เครื่องสาย","แซกโซโฟน","ขลุ่ย","ฮาร์โมนิกา","อูคูเลเล่","พิณ","แคน","ระนาด","ซอ"];
+const INST_EN={"กีตาร์โปร่ง":"acoustic guitar","กีตาร์ไฟฟ้า":"electric guitar","เปียโน":"piano","เปียโนไฟฟ้า":"Rhodes electric piano","ซินธ์":"synth","เบส":"bass guitar","ดับเบิลเบส":"upright bass","กลอง":"drums","808":"808 bass","เครื่องสาย":"strings","แซกโซโฟน":"saxophone","ขลุ่ย":"Thai flute","ฮาร์โมนิกา":"harmonica","อูคูเลเล่":"ukulele","พิณ":"phin (Thai lute)","แคน":"khaen","ระนาด":"ranat","ซอ":"Thai fiddle"};
+const RHYMES={
+  tail:{t:"สัมผัสท้ายบรรทัด",d:"คำท้ายบรรทัดใช้สระเดียวกัน ฟังง่าย ร้องตามง่าย",ex:"ยังจำ…วันนั้น / ที่เรา…ฝันกัน"},
+  aabb:{t:"สัมผัสคู่ (AABB)",d:"บรรทัด 1–2 สัมผัสกัน 3–4 สัมผัสกัน ให้ความหนักแน่น",ex:"ไฟ / ใจ · ทาง / ร้าง"},
+  abab:{t:"สัมผัสสลับ (ABAB)",d:"บรรทัดเว้นบรรทัดสัมผัสกัน ฟังมีจังหวะไหลลื่น",ex:"ฝน / ทาง / ทน / ร้าง"},
+  abcb:{t:"สัมผัสบรรทัดคู่ (ABCB)",d:"สัมผัสเฉพาะบรรทัดที่ 2 กับ 4 เป็นธรรมชาติที่สุด นิยมในเพลงป๊อป",ex:"…/ เธอ / …/ เจอ"},
+  klon:{t:"สัมผัสแบบกลอน (ส่งสัมผัสข้ามวรรค)",d:"คำท้ายวรรคส่งสัมผัสไปคำกลางวรรคถัดไป แบบกลอนแปด เหมาะกับลูกทุ่ง เพื่อชีวิต",ex:"ทุ่งนาเขียว…รอ / ยังเฝ้าพอ…ใจ"},
+  inner:{t:"สัมผัสใน",d:"คำในวรรคเดียวกันสัมผัสสระหรือพยัญชนะกัน ให้ภาษาไพเราะ ลื่นปาก",ex:"รักร้าง ห่างหาย ใจสลาย"},
+  mono:{t:"สัมผัสสระเดียวทั้งท่อน",d:"ทุกบรรทัดในท่อนฮุกจบด้วยสระเดียวกัน ติดหู จำง่าย",ex:"เธอ / เจอ / เผลอ / เพ้อ"},
+  multi:{t:"สัมผัสหลายพยางค์ (แร็พ)",d:"สัมผัส 2–3 พยางค์ต่อเนื่อง ทั้งท้ายบรรทัดและกลางบรรทัด",ex:"ล้มลุกคลุกคลาน / ทุกวันที่ผ่าน"},
+  free:{t:"อิสระ ไม่เน้นสัมผัส",d:"เน้นภาพและความรู้สึก ใช้สัมผัสเฉพาะที่เป็นธรรมชาติ",ex:"แสงไฟจากหน้าต่างห้องข้าง ๆ…"}
+};
+const STRUCTS={
+  vpc:"Verse – Pre-Chorus – Chorus – Verse – Pre-Chorus – Chorus – Bridge – Chorus",
+  vc:"Verse – Chorus – Verse – Chorus – Outro",
+  vpcb:"Intro – Verse – Pre-Chorus – Chorus – Verse – Pre-Chorus – Chorus – Dance Break – Bridge – Chorus",
+  classic:"ท่อนเกริ่น – ท่อน A – ท่อน A – ท่อนฮุก – ท่อนดนตรี – ท่อน A – ท่อนฮุก – ท่อนจบ",
+  story:"Intro – Verse 1 – Verse 2 – Chorus – Verse 3 – Chorus – Outro",
+  rap:"Intro – Verse 1 (16 บาร์) – Hook – Verse 2 (16 บาร์) – Hook – Bridge – Hook",
+  aaba:"A – A – B – A (แบบเพลงแจ๊สมาตรฐาน)",
+  edm:"Intro – Verse – Build-up – Drop – Verse – Build-up – Drop – Outro"
+};
+
+const state={genre:null,mood:new Set(),inst:new Set(),rhyme:"abcb",tab:"lyric"};
+const $=id=>document.getElementById(id);
+
+function chip(label,pressed,onClick){
+  const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=label;
+  b.setAttribute("aria-pressed",pressed?"true":"false");b.onclick=onClick;return b;
+}
+function render(){
+  const rec=state.genre?GENRES[state.genre]:null;
+  const g=$("genre");g.innerHTML="";
+  Object.keys(GENRES).forEach(k=>g.appendChild(chip(k,state.genre===k,()=>{state.genre=state.genre===k?null:k;render();})));
+  const m=$("mood");m.innerHTML="";
+  MOODS.forEach(k=>{const c=chip(k,state.mood.has(k),()=>{state.mood.has(k)?state.mood.delete(k):state.mood.add(k);render();});
+    if(rec&&rec.mood.includes(k))c.classList.add("rec");m.appendChild(c);});
+  const i=$("inst");i.innerHTML="";
+  INSTS.forEach(k=>{const c=chip(k,state.inst.has(k),()=>{state.inst.has(k)?state.inst.delete(k):state.inst.add(k);render();});
+    if(rec&&rec.inst.includes(k))c.classList.add("rec");i.appendChild(c);});
+  const r=$("rhyme");r.innerHTML="";
+  Object.entries(RHYMES).forEach(([k,v])=>{
+    const b=document.createElement("button");b.type="button";b.className="rhyme"+(rec&&rec.rhyme===k?" rec":"");
+    b.setAttribute("aria-pressed",state.rhyme===k?"true":"false");
+    b.innerHTML=`<strong>${v.t}</strong><span>${v.d}</span><em>ตัวอย่าง: ${v.ex}</em>`;
+    b.onclick=()=>{state.rhyme=k;render();};r.appendChild(b);});
+  const rb=$("recbar");
+  if(rec){rb.classList.add("show");
+    $("rectext").innerHTML=`<b>แนะนำสำหรับ${state.genre}:</b> ${rec.inst.join(", ")} · ประมาณ ${rec.bpm} BPM · สัมผัสแบบ${RHYMES[rec.rhyme].t} · อารมณ์${rec.mood.join("/")}`;
+  } else rb.classList.remove("show");
+}
+function fillStructs(){
+  const s=$("structure");s.innerHTML="";
+  Object.entries(STRUCTS).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;s.appendChild(o);});
+}
+function bpmText(v){return v<80?"ช้า ฟังสบาย":v<105?"ปานกลาง":v<130?"ค่อนข้างเร็ว":"เร็ว มันส์";}
+function setBpm(v){$("bpm").value=v;$("bpmOut").textContent=v;$("bpmLabel").textContent=bpmText(+v);}
+$("bpm").oninput=e=>setBpm(e.target.value);
+
+$("applyRec").onclick=()=>{
+  const rec=GENRES[state.genre];if(!rec)return;
+  state.inst=new Set(rec.inst);state.mood=new Set(rec.mood);state.rhyme=rec.rhyme;
+  setBpm(rec.bpm);$("structure").value=rec.str;render();
+};
+
+const IDEAS=["คนที่ยังรอแฟนเก่าที่ป้ายรถเมล์เดิมทุกเย็น","เพื่อนสนิทที่แอบรักแต่ไม่กล้าบอก จนวันที่เขาส่งการ์ดแต่งงานมา","เด็กต่างจังหวัดที่มาทำงานในเมืองและคิดถึงบ้าน","คนที่เพิ่งลาออกจากงานที่เกลียด และรู้สึกเป็นอิสระครั้งแรก","ความรักที่เริ่มจากแชตตอนตีสอง","แม่ที่ส่งข้อความมาถามว่ากินข้าวหรือยังทุกวัน","คู่รักที่ต้องอยู่ห่างกันคนละประเทศ","คืนสุดท้ายก่อนย้ายออกจากห้องเช่าที่อยู่มาห้าปี","คนที่ล้มเหลวซ้ำ ๆ แต่ยังไม่ยอมแพ้","ฤดูฝนที่ทำให้นึกถึงรักครั้งแรก"];
+$("random").onclick=()=>{
+  const keys=Object.keys(GENRES);const g=keys[Math.floor(Math.random()*keys.length)];
+  state.genre=g;$("topic").value=IDEAS[Math.floor(Math.random()*IDEAS.length)];
+  $("applyRec").onclick();build();
+};
+
+function build(){
+  const g=state.genre||"ป๊อป";const rec=GENRES[g];
+  const moods=[...state.mood];const insts=[...state.inst];const rh=RHYMES[state.rhyme];
+  const bpm=$("bpm").value;const topic=$("topic").value.trim()||"(ให้คิดเรื่องราวที่เข้ากับแนวและอารมณ์ที่เลือก)";
+  const keys=$("keys").value.trim();const struct=STRUCTS[$("structure").value];
+  const lyric=
+`ช่วยแต่งเนื้อเพลงให้หน่อย ตามรายละเอียดนี้
+
+แนวเพลง: ${g}
+อารมณ์: ${moods.length?moods.join(", "):"เข้ากับแนวเพลง"}
+เรื่องราว: ${topic}
+มุมมองการเล่า: ${$("pov").value}
+ภาษา: ${$("lang").value}
+เสียงร้อง: ${$("vocal").value}
+ดนตรีประกอบ (เพื่อให้คำเข้ากับซาวด์): ${insts.length?insts.join(", "):"ตามความเหมาะสมของแนว"}
+จังหวะ: ประมาณ ${bpm} BPM (${bpmText(+bpm)}) ให้จำนวนพยางค์ต่อบรรทัดร้องได้พอดีกับความเร็วนี้
+
+โครงสร้าง: ${struct}
+
+การสัมผัส: ${rh.t}
+- ${rh.d}
+- ตัวอย่างลักษณะ: ${rh.ex}
+${keys?`\nคำ/วลีที่ต้องมีในเพลง: ${keys}\n`:""}
+ข้อกำหนดเพิ่มเติม:
+- ท่อนฮุกต้องติดหู มีวลีหลักที่ซ้ำได้และเป็นชื่อเพลงได้
+- ใช้ภาพและรายละเอียดที่จับต้องได้ เล่าด้วยฉาก สิ่งของ ช่วงเวลา แทนการบอกความรู้สึกตรง ๆ
+- หลีกเลี่ยงคำซ้ำซากของเพลงรักทั่วไป
+- เขียนป้ายกำกับแต่ละท่อน เช่น [Verse 1] [Chorus]
+- ใส่ชื่อเพลงที่เสนอ 3 ชื่อ และอธิบายสั้น ๆ ว่าวางสัมผัสไว้ตรงไหนบ้าง`;
+  const styleTags=[rec.en,...moods.map(x=>MOOD_EN[x]),...insts.map(x=>INST_EN[x]),`${bpm} BPM`,
+    {"นักร้องชาย":"male vocals","นักร้องหญิง":"female vocals","คู่ชาย-หญิง":"male and female duet","ประสานเสียงกลุ่ม":"group vocals"}[$("vocal").value],
+    {"ภาษาไทย":"Thai lyrics","ไทยผสมอังกฤษ":"Thai and English lyrics","ภาษาอังกฤษ":"English lyrics","ภาษาอีสาน":"Isan Thai lyrics","คำเมือง":"Northern Thai lyrics"}[$("lang").value]
+  ].filter(Boolean);
+  const suno=
+`ช่อง Style of Music (คัดลอกไปวาง):
+${styleTags.join(", ")}
+
+ช่อง Lyrics:
+ให้นำเนื้อเพลงจากแท็บ "เขียนเนื้อเพลง" มาวาง โดยคงป้ายท่อน [Verse] [Chorus] ไว้ เพื่อให้ AI จัดโครงเพลงถูกต้อง
+
+เคล็ดลับ: ใส่ไม่เกิน 6–8 แท็ก และวางแนวเพลงไว้หน้าสุด จะได้ผลชัดที่สุด`;
+  state.out={lyric,suno};$("outSec").hidden=false;showTab(state.tab);
+  $("outSec").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+}
+function showTab(t){
+  state.tab=t;document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t?"true":"false"));
+  if(state.out)$("output").textContent=state.out[t];$("toast").textContent="";
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+$("make").onclick=build;
+$("copy").onclick=async()=>{
+  const text=$("output").textContent;
+  try{await navigator.clipboard.writeText(text);$("toast").textContent="คัดลอกแล้ว";}
+  catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");$("toast").textContent="คัดลอกแล้ว";}catch(_){$("toast").textContent="คัดลอกไม่สำเร็จ ลองกดค้างที่ข้อความเพื่อคัดลอกเอง";}
+    ta.remove();}
+};
+fillStructs();setBpm(96);render();
+</script>
+</body>
+</html>
