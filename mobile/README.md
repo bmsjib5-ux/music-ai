@@ -22,6 +22,13 @@
 - `npm run web` เปิดในเบราว์เซอร์
 - `npm run typecheck` ตรวจ TypeScript
 
+## เปิดเป็นเว็บบน Render
+repo นี้มี `render.yaml` ที่ root อยู่แล้ว
+1. เข้า https://dashboard.render.com → **New +** → **Blueprint**
+2. เลือก repo `bmsjib5-ux/music-ai` แล้วกด **Apply**
+
+Render จะ build เวอร์ชันเว็บของแอปนี้เป็น Static Site (ฟรี) และ build ใหม่เองเมื่อไฟล์ใน `mobile/` บน `main` เปลี่ยน
+
 ## สร้างไฟล์ติดตั้ง (APK / App Store)
 ใช้ [EAS Build](https://docs.expo.dev/build/setup/) ต้องมีบัญชี Expo:
 ```bash
