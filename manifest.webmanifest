@@ -1,0 +1,19 @@
+{
+  "name": "โน้ตแต่งเพลง — ตัวช่วยเขียน prompt",
+  "short_name": "โน้ตแต่งเพลง",
+  "description": "ตัวช่วยเขียน prompt แต่งเพลง เลือกแนวเพลง อารมณ์ เครื่องดนตรี จังหวะ และการสัมผัส",
+  "lang": "th",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EEF0F6",
+  "theme_color": "#D93A72",
+  "categories": ["music", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

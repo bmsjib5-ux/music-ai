@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#D93A72"/>
+  <g fill="#FFFFFF">
+    <rect x="96" y="150" width="320" height="10" rx="5" opacity=".28"/>
+    <rect x="96" y="214" width="320" height="10" rx="5" opacity=".28"/>
+    <rect x="96" y="278" width="320" height="10" rx="5" opacity=".28"/>
+    <rect x="96" y="342" width="320" height="10" rx="5" opacity=".28"/>
+    <polygon points="208,140 372,108 372,152 208,184"/>
+    <rect x="208" y="150" width="22" height="200"/>
+    <rect x="350" y="118" width="22" height="200"/>
+    <ellipse cx="192" cy="352" rx="44" ry="34" transform="rotate(-20 192 352)"/>
+    <ellipse cx="334" cy="320" rx="44" ry="34" transform="rotate(-20 334 320)"/>
+  </g>
+</svg>
